@@ -32,7 +32,10 @@ const Course = mongoose.model('Course', courseSchema); //model return class
 
 async function getCourse() {
     const courses = await Course
-        .find();
+        .find({author: 'Mosh', isPublished: true})
+        .limit(10)
+        .sort({name: 1})            //1 asecending and -1 desecending order
+        .select({name: 1, tags: 1})
     console.log(courses);
 }
 
