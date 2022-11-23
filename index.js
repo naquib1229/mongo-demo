@@ -1,4 +1,4 @@
-//Model
+//Querying Documents
 
  const mongoose = require('mongoose');
 
@@ -16,16 +16,24 @@ const courseSchema = new mongoose.Schema({
 
 const Course = mongoose.model('Course', courseSchema); //model return class
 
-async function createCourse() {
-    const course = new Course({
-    name: 'Node.js course',
-    author: 'Mosh',
-    tags: ['node', 'backend'],
-    isPublished: true
-});
+// async function createCourse() {
+//     const course = new Course({
+//     name: 'Angular course',
+//     author: 'Mosh',
+//     tags: ['Angular', 'frontend'],
+//     isPublished: true
+// });
 
-const result =  await course.save();
-console.log(result);
+// const result =  await course.save();
+// console.log(result);
+// }
+
+//createCourse();
+
+async function getCourse() {
+    const courses = await Course
+        .find();
+    console.log(courses);
 }
 
-createCourse();
+getCourse();
