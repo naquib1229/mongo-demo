@@ -1,4 +1,4 @@
-//Counting
+//Pagination
 
  const mongoose = require('mongoose');
 
@@ -31,10 +31,13 @@ const Course = mongoose.model('Course', courseSchema); //model return class
 //createCourse();
 
 async function getCourse() {
+    const pageNumber = 2;
+    const pageSize =10;
     
     const courses = await Course
         .find({author: 'Mosh', isPublished: true})
-        .limit(10)
+        .skip((pageNumber -1)*pageSize)
+        .limit(pageSize)
         .sort({name: 1})            
         .count();
     console.log(courses);
