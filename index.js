@@ -1,4 +1,6 @@
-//Exercise 1
+//Exercise 2
+//Get all the published frontend and backenc course, sort them by their price in a descending order,
+//Pick only their name and author and display them.
 const mongoose = require('mongoose');
 
 mongoose.connect('mongodb://localhost/mongo-exercises');
@@ -16,9 +18,9 @@ const Course = mongoose.model('Course', courseSchema);
 
 async function getCourses() {
   return await Course
-  .find({ isPublished: true, tags: 'backend' })
-  .sort({ name: 1 })
-  .select({ name: 1, author: 1 });
+  .find({ isPublished: true, tags: {$in: ['frontend', 'backend']} })  //
+  .sort('-price')                                           // .sort({ price: -1 })  
+  .select('name author price');                                    //.select({ name: 1, author: 1 }); 
 }
 
 async function run() {
