@@ -1,4 +1,4 @@
-//Regular Expressions
+//Counting
 
  const mongoose = require('mongoose');
 
@@ -33,20 +33,10 @@ const Course = mongoose.model('Course', courseSchema); //model return class
 async function getCourse() {
     
     const courses = await Course
-        //.find({author: 'Mosh', isPublished: true})
-
-        //starts with Mosh
-        .find({author: /^Mosh/})
-
-        //Ends with Mosh        
-        .find({author: /Hamedani$/i})   //i for case insensitive
-
-        //Contains Mosh
-        .find({author: /.*Mosh.*/i})    //.* represents 0 or more character(any character)
-
+        .find({author: 'Mosh', isPublished: true})
         .limit(10)
         .sort({name: 1})            
-        .select({name: 1, tags: 1})
+        .count();
     console.log(courses);
 }
 
