@@ -1,32 +1,40 @@
-//Exercise 3
-//Get all the published courses that are $15 or more. or have the word 'by' in their title
+//Updating Documents- Query First
+
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/mongo-exercises');
-
+mongoose.connect('mongodb://localhost/playground')
+   .then(() => console.log('Connected to MongoDB...')) 
+   .catch(err => console.error('Could not connect to MongoDB...', err));
+   
 const courseSchema = new mongoose.Schema({
-  name: String,
-  author: String, 
-  tags: [ String ],
-  date: Date, 
-  isPublished: Boolean,
-  price: Number
+   name: String,
+   author: String,
+   tags: [String],
+   date: {type: Date, default: Date.now},
+   isPublished: Boolean
 });
 
-const Course = mongoose.model('Course', courseSchema);
+const Course = mongoose.model('Course', courseSchema); //model return class
 
-async function getCourses() {
-  return await Course
-  .find({ isPublished: true }) 
-  .or([{price: { $gte: 15 }}, 
-    { name: /.*by.*/i }]) 
-  .sort('-price')                                           
-  .select('name author price');                                   
+async function updateCourse(id){
+    // Approach: Query first
+    // findById()
+    const course = await Course.findById(id);
+    if(!course) return;
+
+    // Modify its properties
+    course.isPublished = true;
+    course.author = 'Another Author'
+
+    // course.set( {
+    //     isPublished: true,
+    //     author: 'Another Author'
+    // });
+
+    // save()
+    const result = await course.save();
+    console.log(result);
+
 }
 
-async function run() {
-  const courses = await getCourses();
-  console.log(courses);
-}
-
-run();
+updateCourse('637b28910bf936cd8edbcccd');
