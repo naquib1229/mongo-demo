@@ -1,4 +1,4 @@
-//Comparison Query Operators
+Logical Query Operators
 
  const mongoose = require('mongoose');
 
@@ -31,20 +31,13 @@ const Course = mongoose.model('Course', courseSchema); //model return class
 //createCourse();
 
 async function getCourse() {
-    //eq (equal to)
-    //ne (not equal to)
-    //gt (greater than)
-    //gte (greater than equal to)
-    //lt (less than)
-    //lte (less than equal to)
-    //in
-    //nin (not in)
-
+    //or
+    //and
     const courses = await Course
         //.find({author: 'Mosh', isPublished: true})
-        //.find({price: {$gt: 10}}) // for price greater than 10
-        //.find({price: {$gte: 10, $lte: 20}}) // for price greater than equal to 10 and less than equal to 20
-        .find({price: {$in: [10,15,20]}})   //for price either equal to 10 or 15 or 20
+        .find()
+        .or([{author: 'Mosh'}, {isPublished: true}])
+        .and([])
         .limit(10)
         .sort({name: 1})            
         .select({name: 1, tags: 1})
