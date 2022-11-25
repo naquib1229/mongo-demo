@@ -20,13 +20,13 @@ const Course = mongoose.model('Course', courseSchema); //model return class
 
 async function updateCourse(id){
     
-    const  result = await Course.updateOne( { _id: id }, {
+    const  course = await Course.findByIdAndUpdate( id, {
        $set: {
-      author: 'Mosh',
+      author: 'jason',
       isPublished: false
-    }});
+    }}, { new: true });
 
-    console.log(result);
+    console.log(course);
 
 }
 
