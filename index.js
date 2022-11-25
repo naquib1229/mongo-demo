@@ -1,4 +1,6 @@
-//Updating Documents- Query First
+//Updating a Documents- Update First
+//Starting in MongoDB 5.0, update operators process document fields with string-based names in lexicographic order. 
+//Fields with numeric names are processed in numeric order.
 
 const mongoose = require('mongoose');
 
@@ -17,24 +19,18 @@ const courseSchema = new mongoose.Schema({
 const Course = mongoose.model('Course', courseSchema); //model return class
 
 async function updateCourse(id){
-    // Approach: Query first
-    // findById()
-    const course = await Course.findById(id);
-    if(!course) return;
+    
+    const  result = await Course.updateOne( { _id: id }, {
+       $set: {
+      author: 'Mosh',
+      isPublished: false
+    }});
 
-    // Modify its properties
-    course.isPublished = true;
-    course.author = 'Another Author'
-
-    // course.set( {
-    //     isPublished: true,
-    //     author: 'Another Author'
-    // });
-
-    // save()
-    const result = await course.save();
     console.log(result);
 
 }
 
 updateCourse('637b28910bf936cd8edbcccd');
+
+
+//collection.update is deprecated. Use updateOne, updateMany, or bulkWrite instead.
