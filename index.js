@@ -1,6 +1,4 @@
-//Updating a Documents- Update First
-//Starting in MongoDB 5.0, update operators process document fields with string-based names in lexicographic order. 
-//Fields with numeric names are processed in numeric order.
+//Removing Documents
 
 const mongoose = require('mongoose');
 
@@ -30,7 +28,12 @@ async function updateCourse(id){
 
 }
 
-updateCourse('637b28910bf936cd8edbcccd');
+async function removeCourse(id){
+   //const result = await Course.deleteOne( { _id: id } ); //deleteMany for multiple deletion
+   const course = await Course.findByIdAndRemove(id);
+   console.log(course);
+}
+
+removeCourse('637b28910bf936cd8edbcccd');
 
 
-//collection.update is deprecated. Use updateOne, updateMany, or bulkWrite instead.
