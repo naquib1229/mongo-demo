@@ -1,6 +1,5 @@
-//Validation
-//this validation implemented here is only meaningful in Mongoose and not MongoDB like SQL DB.
-//Joi vs mongoose validation, we should use both Joi insures in RESTapi that user doesn't entered wrong data, here mongoose ensures after that any flaw not entered by mistake.
+//Built in Validators
+//set price to be required, if isPublished is true
 
 const mongoose = require('mongoose');
 
@@ -14,7 +13,10 @@ const courseSchema = new mongoose.Schema({
    tags: [String],
    date: {type: Date, default: Date.now},
    isPublished: Boolean,
-   price: Number
+   price:  {
+      type: Number,
+      required: function() { return this. isPublished;} //here we can't use arrow function
+     }
 });
 
 const Course = mongoose.model('Course', courseSchema); //model return class
@@ -25,10 +27,10 @@ async function createCourse() {
      author: 'Mosh',
      tags: ['angular', 'frontend'],
      isPublished: true,
-     price: 15
+     //price: 15
    })
    try{
-      //await course.validate();
+      //await course.validate(); //retuns promise or void
       const result = await course.save();
       console.log(result);  
    }
