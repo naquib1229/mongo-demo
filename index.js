@@ -1,6 +1,6 @@
-//Built in Validators
-//String  minlength, maxlength, match, enum
-//Number  min max 
+//Custom Validators
+//tags: [String], if we want to ensure that there is at least one tag but here we can't ensure this by using required because empty string is also string with zero length.
+//To overcome this we use validate
 
 const mongoose = require('mongoose');
 
@@ -22,12 +22,20 @@ const courseSchema = new mongoose.Schema({
       enum: ['web', 'mobile', 'network']
    },
    author: String,
-   tags: [String],
+   tags: {
+      type: Array,
+      validate: {
+         validator: function(v) {
+            return v && v.length > 0;
+         },
+         message: 'A course should have at least one tag.'
+      }
+   },
    date: {type: Date, default: Date.now},
    isPublished: Boolean,
    price:  {
       type: Number,
-      required: function() { return this. isPublished;} //here we can't use arrow function
+      required: function() { return this. isPublished;}, //here we can't use arrow function
       min: 10,
       max: 200
      }
@@ -38,9 +46,9 @@ const Course = mongoose.model('Course', courseSchema); //model return class
 async function createCourse() {
    const course = new Course( {
      name: 'Angular course',
-     category: '-',
+     category: 'web',
      author: 'Mosh',
-     tags: ['angular', 'frontend'],
+     tags: null,   //if null, cannot read property 'lenght' of null
      isPublished: true,
      price: 15
    })
