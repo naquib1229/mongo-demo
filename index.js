@@ -1,5 +1,6 @@
 //Built in Validators
-//set price to be required, if isPublished is true
+//String  minlength, maxlength, match, enum
+//Number  min max 
 
 const mongoose = require('mongoose');
 
@@ -8,7 +9,18 @@ mongoose.connect('mongodb://localhost/playground')
    .catch(err => console.error('Could not connect to MongoDB...', err));
    
 const courseSchema = new mongoose.Schema({
-   name: {type: String, required: true},
+   name: {
+      type: String, 
+      required: true,
+      minlength: 5,
+      maxlength: 255,
+      // match: /pattern/
+   },
+   category: {
+      type: String,
+      required: true,
+      enum: ['web', 'mobile', 'network']
+   },
    author: String,
    tags: [String],
    date: {type: Date, default: Date.now},
@@ -16,6 +28,8 @@ const courseSchema = new mongoose.Schema({
    price:  {
       type: Number,
       required: function() { return this. isPublished;} //here we can't use arrow function
+      min: 10,
+      max: 200
      }
 });
 
@@ -23,11 +37,12 @@ const Course = mongoose.model('Course', courseSchema); //model return class
 
 async function createCourse() {
    const course = new Course( {
-     //name: 'Angular course',
+     name: 'Angular course',
+     category: '-',
      author: 'Mosh',
      tags: ['angular', 'frontend'],
      isPublished: true,
-     //price: 15
+     price: 15
    })
    try{
       //await course.validate(); //retuns promise or void
