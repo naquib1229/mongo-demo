@@ -34,8 +34,8 @@ async function listCourses() {
 
 async function updateAuthor(courseId) {
     const course = await Course.updateOne({_id: courseId}, {
-        $set: {
-            'author.name': 'John Smith'
+        $unset: {
+            'author': ''
         }
     });
     
