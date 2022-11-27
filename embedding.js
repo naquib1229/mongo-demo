@@ -32,4 +32,11 @@ async function listCourses() {
   console.log(courses);
 }
 
-createCourse('Node Course', new Author({ name: 'Mosh' }));
+async function updateAuthor(courseId) {
+    const course = await Course.findById(courseId);
+    course.author.name = 'Mosh Hamedani';
+    course.save();
+}
+
+//createCourse('Node Course', new Author({ name: 'Mosh' }));
+updateAuthor('6383491824de00222abd6b35');
