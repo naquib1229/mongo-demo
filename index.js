@@ -1,6 +1,6 @@
-//Custom Validators
-//tags: [String], if we want to ensure that there is at least one tag but here we can't ensure this by using required because empty string is also string with zero length.
-//To overcome this we use validate
+//Async Validators
+//Now sometimes the validation logic may evolve ridding something from a database or from a remote http service.
+//So, we don't have the answer straight away. In that case we need an asynce validator.
 
 const mongoose = require('mongoose');
 
@@ -25,9 +25,14 @@ const courseSchema = new mongoose.Schema({
    tags: {
       type: Array,
       validate: {
-         validator: function(v) {
-            return v && v.length > 0;
-         },
+         isAsync: true,
+         validator: function(v, callback) {
+            setTimeout(() => {
+               //Do some async work
+               const result = v && v.length > 0;
+               callback(result); // Error- callback is not a function          
+            }, 4000);     
+      } ,
          message: 'A course should have at least one tag.'
       }
    },
