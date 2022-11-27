@@ -1,6 +1,4 @@
-//Async Validators
-//Now sometimes the validation logic may evolve ridding something from a database or from a remote http service.
-//So, we don't have the answer straight away. In that case we need an asynce validator.
+//Validation Errors
 
 const mongoose = require('mongoose');
 
@@ -51,7 +49,7 @@ const Course = mongoose.model('Course', courseSchema); //model return class
 async function createCourse() {
    const course = new Course( {
      name: 'Angular course',
-     category: 'web',
+     category: '-',
      author: 'Mosh',
      tags: null,   //if null, cannot read property 'lenght' of null
      isPublished: true,
@@ -63,7 +61,8 @@ async function createCourse() {
       console.log(result);  
    }
    catch(ex){
-      console.log(ex.message);
+      for(field in ex.errors)
+         console.log(ex.errors[field].message);
    }
    
  }
