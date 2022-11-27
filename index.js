@@ -1,4 +1,4 @@
-//Validation Errors
+//SchemaType Options
 
 const mongoose = require('mongoose');
 
@@ -17,20 +17,15 @@ const courseSchema = new mongoose.Schema({
    category: {
       type: String,
       required: true,
-      enum: ['web', 'mobile', 'network']
+      enum: ['web', 'mobile', 'network'],
+      lowercase: true, //uppercase: true
+      trim: true
    },
    author: String,
    tags: {
       type: Array,
       validate: {
-         isAsync: true,
-         validator: function(v, callback) {
-            setTimeout(() => {
-               //Do some async work
-               const result = v && v.length > 0;
-               callback(result); // Error- callback is not a function          
-            }, 4000);     
-      } ,
+         validator: (v) => v && v.length > 0,
          message: 'A course should have at least one tag.'
       }
    },
@@ -40,7 +35,9 @@ const courseSchema = new mongoose.Schema({
       type: Number,
       required: function() { return this. isPublished;}, //here we can't use arrow function
       min: 10,
-      max: 200
+      max: 200,
+      get: v => Math.round(v),
+      set: v => Math.round(v)
      }
 });
 
@@ -49,11 +46,11 @@ const Course = mongoose.model('Course', courseSchema); //model return class
 async function createCourse() {
    const course = new Course( {
      name: 'Angular course',
-     category: '-',
+     category: 'Web',
      author: 'Mosh',
-     tags: null,   //if null, cannot read property 'lenght' of null
+     tags: ['frontend'],   //if null, cannot read property 'lenght' of null
      isPublished: true,
-     price: 15
+     price: 15.8
    })
    try{
       //await course.validate(); //retuns promise or void
@@ -67,6 +64,19 @@ async function createCourse() {
    
  }
 
+ async function getCourses() {
+   const pageNumber = 2;
+   const pageSize = 10;
+
+   const courses = await Course
+      .find({ _id: '6382c1b834128af8f1b1e451'})
+      // .skip((pageNumber - 1) * pageSize)
+      // .limit(pageSize)
+      .sort({name : 1})
+      .select( { name: 1, tags: 1, price: 1}); //NaN if price was not included
+    console.log(courses[0].price);  
+
+ }
  
 async function updateCourse(id){
     
@@ -86,6 +96,6 @@ async function removeCourse(id){
    console.log(course);
 }
 
-createCourse();
+getCourses();
 
 
